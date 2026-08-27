@@ -29,6 +29,7 @@ namespace MCPO {
 		private readonly Harmony _harmony = new(ModGUID);
 		public static Plugin Instance { get; private set; } = null!;
 		internal static bool liquidrepair = true;
+		internal static bool liquidquarepair = true;
 		internal static bool idrepair = true;
 		internal static bool qualityrepair = true;
 		internal static float repairmult = 1f;
@@ -41,10 +42,18 @@ namespace MCPO {
 
 			ModOptionsRegistry.Register(ModOptionDefinition.Bool(ModGUID + ".liquidrepair",
 			"Liquid repair",
-			"Use liquids in the item's recipe to repair it",
+			"Use exact liquids in the item's recipe to repair it",
 			Setting.SettingCategory.Game,
 			true, value => {
 				liquidrepair = value;
+			}));
+
+			ModOptionsRegistry.Register(ModOptionDefinition.Bool(ModGUID + ".liquidquarepair",
+			"Liquid quality repair",
+			"Use qualifying liquids in the item's recipe to repair it",
+			Setting.SettingCategory.Game,
+			true, value => {
+				liquidquarepair = value;
 			}));
 
 			ModOptionsRegistry.Register(ModOptionDefinition.Bool(ModGUID + ".idrepair",

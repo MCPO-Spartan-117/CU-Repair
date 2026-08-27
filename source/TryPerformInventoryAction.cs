@@ -28,11 +28,11 @@ namespace MCPO {
 							float liquse = 0f;
 							float cond = 1f;
 							foreach(RecipeItem part in recitems) {
-								if(Plugin.liquidrepair && part?.isLiquid != null && part.isLiquid) {
+								if((Plugin.liquidrepair || Plugin.liquidquarepair) && part?.isLiquid != null && part.isLiquid) {
 									if(dragItem.TryGetComponent<WaterContainerItem>(out var liqcomp)) {
 										foreach(LiquidStack liq in liqcomp.stack) {
-											Liquids.Registry.TryGetValue(liq.liquidId, out var value);
-											if(part?.quality != null) {
+											if(Plugin.liquidquarepair && part?.quality != null) {
+												Liquids.Registry.TryGetValue(liq.liquidId, out var value);
 												CraftingQuality qualityThatMeetsCriteria = Item.GetQualityThatMeetsCriteria(part.quality.id, value.GetScaledQualities(liq.amount));
 												if(qualityThatMeetsCriteria != null) {
 													id = liq.liquidId;
@@ -40,6 +40,13 @@ namespace MCPO {
 													cond = Mathf.Clamp01(qualityThatMeetsCriteria.amount / part.quality.amount);
 													repair = true;
 													break;
+												}
+											} else if(Plugin.liquidrepair && part?.specificId != null) {
+												if(part.specificId == liq.liquidId) {
+													id = liq.liquidId;
+													liquse = Mathf.Lerp(0f, liq.amount, part.minimumCondition / liq.amount);
+													cond = Mathf.Clamp01(liq.amount / part.minimumCondition);
+													repair = true;
 												}
 											}
 										}
