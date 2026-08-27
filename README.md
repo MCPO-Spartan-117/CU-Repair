@@ -1,30 +1,17 @@
-# Template BepInEx Plugin
+# Repair
 
-A small BepInEx plugin template for Unity modding Casualties Unknown with CUCoreLib
+A small BepInEx plugin for Casualties Unknown to modify `PlayerCamera::TryPerformInventoryAction` to add a function to repair items with recipes with its recipe items.
 
 ## Overview 
-- Includes `CUCoreLib` references/usings, Harmony, Newtonsoft.Json, and Unity assembly references
-- Includes a `ContentReloadManager.EnableHotReload(...)` starter pattern
-- Automatically embeds `.png`, `.jpg`, and `.jpeg` files placed under `images/` or `assets/`
-- Expands common Steam install paths on Windows and Linux
+Options to repair with liquids, exact items or items that qualify and to change how much they repair,
+How much is repaired depends on the durability or quantity that was used, over-repairing simply damages the repair item instead of destroying it.
+
+## TODO
+Exclude tag system, probably will need to be in a BepInEx config.
+Balancing, obviously some recipes will be unbalanced, will be configurable but generally should honor rule it as modded items do exist and may not use proper tags.
 
 ## Build
-
-1. Open the project in Visual Studio or JetBrains Rider. (Or any other IDE)
-2. Build `ScavTemplate/Template.csproj` via Ctrl + Shift + B (`dotnet build`)
-3. If auto-detection misses your setup, open the linked `vars.targets` file from the project and override `BaseGamePath` 
-
-## Usage
-
-1. Update `Plugin.cs` with your plugin GUID, name, version.
-2. Update the namespace in `Plugin.cs` and `Patches.cs`.
-3. Put startup-only funntions before `ContentReloadManager.EnableHotReload(ModGUID)`.
-4. Put reloadable item/recipe/content registration inside `RegisterReloadable()` / `DoStuff()`.
-5. Place art files under `images/` or `assets/` to auto-embed them, or set `Build Action = Embedded Resource` manually elsewhere in the project.
-6. Run the game with BepInEx and `CUCoreLib` installed in the plugins folder! ^^
-
-## Hot Reload Notes
-
-- Use `reloadcontent <modGuid>` in the in-game console to replay supported registrations.
-- Use `autohotreload <modGuid> true` to enable auto reload.
-- If Windows locks the deployed plugin DLL, set `[Hot Reload] -> <modGuid>.overridePath` in `CUCoreLib.cfg` to your rebuilt `bin\Debug` DLL.
+1. (Optional) Mod source can be placed inside of the game directory, (game/dir/mod)
+2. Open the project in Visual Studio, JetBrains Rider or use the dotnet SDK CLI. (Or any other IDE)
+3. Build `ScavTemplate/Template.csproj` via Ctrl + Shift + B (`dotnet build`)
+4. If auto-detection misses your setup, open the linked `vars.targets` file from the project and override `BaseGamePath`
