@@ -21,8 +21,8 @@ namespace MCPO {
 	[BepInPlugin(ModGUID, ModName, ModVersion)]
 	[BepInDependency("net.cucorelib", BepInDependency.DependencyFlags.HardDependency)]
 	public class Plugin : BaseUnityPlugin {
-		public const string ModGUID = "LGPLv3.MCPO.Repair";
 		public const string ModName = "Repair"; // To change .dll name, change the name in vars.targets
+		public const string ModGUID = "LGPLv3.MCPO." + ModName;
 		public const string ModVersion = "1.0.1";
 
 		internal static new ManualLogSource Logger;
