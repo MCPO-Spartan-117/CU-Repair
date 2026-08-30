@@ -120,7 +120,7 @@ namespace MCPO {
 //						item.battery.UnloadBattery();
 
 			public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator ILgen) {
-				Logger.LogInfo("Patching NoContainerDecayPatch");
+				Logger.LogInfo("Inserting function entry in PlayerCamera::TryPerformInventoryAction");
 				var startidx = -1;
 				var endidx = -1;
 				var methodidx = -1;
