@@ -63,9 +63,7 @@ namespace MCPO {
 							}
 
 							if(repair) {
-								float overshoot = item.condition + (Plugin.repairmult / recitems.Count);
 								float liqovershoot = item.condition + ((Plugin.repairmult * cond) / recitems.Count);
-								item.SetCondition(Mathf.Clamp01(liqovershoot));
 								float temp = 1f;
 								bool getcomp = dragItem.TryGetComponent<WaterContainerItem>(out var liqcomp);
 								if(liquse > 0f && id != "") {
@@ -87,11 +85,13 @@ namespace MCPO {
 //									} else {
 //										dragItem.SetCondition(temp2);
 //									}
+									float overshoot = item.condition + (Plugin.repairmult / recitems.Count);
 									if(overshoot > 1f) {
 										temp = 1 - (overshoot - 1) / (Plugin.repairmult / recitems.Count);
 									}
 									dragItem.SetCondition(Mathf.Clamp01(dragItem.condition - temp));
 								}
+								item.SetCondition(Mathf.Clamp01(liqovershoot));
 								return true;
 							}
 						}
