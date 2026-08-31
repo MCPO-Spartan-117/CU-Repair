@@ -26,7 +26,9 @@ namespace MCPO {
 							bool repair = false;
 							string id = "";
 							float liquse = 0f;
+							float itemuse = 1f;
 							float cond = 1f;
+							List<CraftingQuality> partqualist = new List<CraftingQuality>();
 							foreach(RecipeItem part in recitems) {
 								if((Plugin.liquidrepair || Plugin.liquidquarepair) && part?.isLiquid != null && part.isLiquid) {
 									if(dragItem.TryGetComponent<WaterContainerItem>(out var liqcomp)) {
@@ -55,11 +57,26 @@ namespace MCPO {
 									cond = dragItem.condition;
 									repair = true;
 									break;
-								} else if(Plugin.qualityrepair && part?.quality != null && Item.HasCommonQuality(part.quality.id, dragItem.Stats.qualities) != null) {
-									cond = dragItem.condition;
-									repair = true;
-									break;
+								} else if(Plugin.qualityrepair && part?.quality != null && Item.HasCommonQuality(part.quality, dragItem.Stats.qualities) != null) {
+									partqualist.Add(part.quality);
 								}
+							}
+
+							if(!repair && partqualist.Count > 0) {
+								float dragamo = 0f;
+								CraftingQuality partqua = null;
+								CraftingQuality dragqua = null;
+								foreach(CraftingQuality quality in partqualist) {
+									dragqua = Item.HasCommonQuality(quality, dragItem.Stats.qualities);
+									if(dragamo < dragqua.amount) {
+										dragamo = dragqua.amount;
+										partqua = quality;
+									}
+								}
+
+								itemuse = partqua.amount / dragamo;
+								cond = dragItem.condition;
+								repair = true;
 							}
 
 							if(repair) {
@@ -89,7 +106,7 @@ namespace MCPO {
 									if(overshoot > 1f) {
 										temp = 1 - (overshoot - 1) / (Plugin.repairmult / recitems.Count);
 									}
-									dragItem.SetCondition(Mathf.Clamp01(dragItem.condition - temp));
+									dragItem.SetCondition(Mathf.Clamp01(dragItem.condition - (itemuse * temp)));
 								}
 								item.SetCondition(Mathf.Clamp01(liqovershoot));
 								return true;
