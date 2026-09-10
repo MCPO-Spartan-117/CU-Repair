@@ -17,9 +17,48 @@ using System.Collections.Generic;
 namespace MCPO {
 	class TryPerformInventoryAction {
 		static ManualLogSource Logger = MCPO.Plugin.Logger;
+
+		enum bannedtype {
+			liq,
+			liqqua,
+			item,
+			itemqua,
+			repair,
+			max
+		}
+		static bool bannedtest(string id, bannedtype type) {
+			List<string> testlist = null;
+			switch(type) {
+				case bannedtype.liq:
+					testlist = Plugin.conf.banned.liq;
+				break;
+				case bannedtype.liqqua:
+					testlist = Plugin.conf.banned.liqqua;
+				break;
+				case bannedtype.item:
+					testlist = Plugin.conf.banned.item;
+				break;
+				case bannedtype.itemqua:
+					testlist = Plugin.conf.banned.itemqua;
+				break;
+				case bannedtype.repair:
+					testlist = Plugin.conf.banned.repair;
+				break;
+			}
+
+			if(testlist != null) {
+				foreach(string str in testlist) {
+					if(str == id) {
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+
 		static bool repairfunct(Item dragItem, Item item) {
 			if(Input.GetKey(CUCoreUtils.GetFriendlyKeyBind(CUCoreUtils.GetFriendlyKeyName(KeyCode.N)))) {
-				if((bool)item && !(bool)item.battery && !item.TryGetComponent<WaterContainerItem>(out var throwaway) && item.condition < 1f) {
+				if((bool)item && bannedtest(item.id, bannedtype.repair) && !(bool)item.battery && !item.TryGetComponent<WaterContainerItem>(out var throwaway) && item.condition < 1f) {
 					foreach(Recipe recipe in Recipes.recipes) {
 						if(recipe?.result != null && recipe.result.id == item.id) {
 							List<RecipeItem> recitems = recipe.items;
@@ -33,7 +72,7 @@ namespace MCPO {
 								if((Plugin.liquidrepair || Plugin.liquidquarepair) && part?.isLiquid != null && part.isLiquid) {
 									if(dragItem.TryGetComponent<WaterContainerItem>(out var liqcomp)) {
 										foreach(LiquidStack liq in liqcomp.stack) {
-											if(Plugin.liquidquarepair && part?.quality != null) {
+											if(Plugin.liquidquarepair && part?.quality != null && bannedtest(part.quality.id, bannedtype.liqqua)) {
 												Liquids.Registry.TryGetValue(liq.liquidId, out var value);
 												CraftingQuality qualityThatMeetsCriteria = Item.GetQualityThatMeetsCriteria(part.quality.id, value.GetScaledQualities(liq.amount));
 												if(qualityThatMeetsCriteria != null) {
@@ -44,7 +83,7 @@ namespace MCPO {
 													break;
 												}
 											} else if(Plugin.liquidrepair && part?.specificId != null) {
-												if(part.specificId == liq.liquidId) {
+												if(part.specificId == liq.liquidId && bannedtest(part.specificId, bannedtype.liq)) {
 													id = liq.liquidId;
 													liquse = Mathf.Lerp(0f, liq.amount, part.minimumCondition / liq.amount);
 													cond = Mathf.Clamp01(liq.amount / part.minimumCondition);
@@ -53,11 +92,11 @@ namespace MCPO {
 											}
 										}
 									}
-								} else if(Plugin.idrepair && part?.specificId != null && part.specificId == dragItem.id) {
+								} else if(Plugin.idrepair && part?.specificId != null && part.specificId == dragItem.id && bannedtest(part.specificId, bannedtype.item)) {
 									cond = dragItem.condition;
 									repair = true;
 									break;
-								} else if(Plugin.qualityrepair && part?.quality != null && Item.HasCommonQuality(part.quality, dragItem.Stats.qualities) != null) {
+								} else if(Plugin.qualityrepair && part?.quality != null && Item.HasCommonQuality(part.quality, dragItem.Stats.qualities) != null && bannedtest(part.quality.id, bannedtype.itemqua)) {
 									partqualist.Add(part.quality);
 								}
 							}
