@@ -13,6 +13,8 @@
 		</RestoreAdditionalProjectSources>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Deterministic>true</Deterministic>
+    <YAML>false</YAML>
+    <YAML Condition="Exists('../support/Repair-YAML/bin/$(Configuration)/net48/Repair-YAML.dll')">true</YAML>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -45,6 +47,7 @@
       Version="0.4.2"
       PrivateAssets="all"
     />
+    <PackageReference Include="YamlDotNet" Version="18.1.0" PrivateAssets="all" Condition="$(YAML)" />
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" IncludeAssets="compile" />
     <PackageReference Include="HarmonyX" Version="2.9.0" />
@@ -67,6 +70,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup Condition="$(YAML)">
+    <Reference Include="Repair-YAML">
+      <HintPath>../support/Repair-YAML/bin/$(Configuration)/net48/Repair-YAML.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
     <PackageReference
       Include="Microsoft.NETFramework.ReferenceAssemblies"
@@ -84,12 +93,21 @@
   <PropertyGroup>
   <RequiredFilesToCopy>
   $(ProjectName).dll;
-  $(ProjectName).pdb
+  $(ProjectName).pdb;
   </RequiredFilesToCopy>
 
 
   <RequiredFoldersToCopy>  
   </RequiredFoldersToCopy>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(YAML)">
+    <RequiredFilesToCopy>
+    $(RequiredFilesToCopy)
+    $(ProjectName)-YAML.dll;
+    </RequiredFilesToCopy>
+
+    <DefineConstants>YAML</DefineConstants>
   </PropertyGroup>
 
   <Target Name="CopyOutputDllsToPluginsFolder" AfterTargets="AfterBuild" Condition="'$(RequiredFilesToCopy)'!=''">
