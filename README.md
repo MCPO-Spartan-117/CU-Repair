@@ -5,7 +5,7 @@ A small BepInEx plugin for Casualties Unknown to modify `PlayerCamera::TryPerfor
 ## Overview 
 Options to repair with liquids, exact items or items that qualify and to change how much they repair,\
 How much is repaired depends on the durability or quantity that was used, over-repairing simply damages the repair item instead of destroying it.\
-Optionally uses [YamlDotNet](https://www.nuget.org/packages/YamlDotNet)(/lib/net47) for advanced configuration.
+Optionally uses [YamlDotNet](https://www.nuget.org/packages/YamlDotNet) via [BepInEx-YamlDotNet](https://github.com/MCPO-Spartan-117/BepInEx-YamlDotNet) for advanced configuration.
 
 ## TODO
 Balancing, obviously some recipes will be unbalanced, will be configurable but generally should honor rule it as modded items do exist and may not use proper tags.
