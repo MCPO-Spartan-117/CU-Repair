@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../vars.targets" />
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <AssemblyName>$(ProjectName)</AssemblyName>
@@ -14,7 +15,7 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Deterministic>true</Deterministic>
     <YAML>false</YAML>
-    <YAML Condition="Exists('../support/Repair-YAML/bin/$(Configuration)/net48/Repair-YAML.dll')">true</YAML>
+    <YAML Condition="Exists('$(BepInExDir)/plugins/BepInEx-YamlDotNet/BepInEx-YamlDotNet.dll')">true</YAML>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,8 +35,6 @@
       <ErrorReport>prompt</ErrorReport>
       <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-
-  <Import Project="../vars.targets" />
 
   <ItemGroup>
     <None Include="..\\vars.targets" Link="vars.targets" />
@@ -71,8 +70,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(YAML)">
-    <Reference Include="Repair-YAML">
-      <HintPath>../support/Repair-YAML/bin/$(Configuration)/net48/Repair-YAML.dll</HintPath>
+    <Reference Include="BepInEx-YamlDotNet">
+      <HintPath>$(BepInExDir)/plugins/BepInEx-YamlDotNet/BepInEx-YamlDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -102,11 +101,6 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="$(YAML)">
-    <RequiredFilesToCopy>
-    $(RequiredFilesToCopy)
-    $(ProjectName)-YAML.dll;
-    </RequiredFilesToCopy>
-
     <DefineConstants>YAML</DefineConstants>
   </PropertyGroup>
 

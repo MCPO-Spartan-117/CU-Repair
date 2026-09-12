@@ -12,7 +12,7 @@ Balancing, obviously some recipes will be unbalanced, will be configurable but g
 
 ## Build
 1. (Optional) Mod source can be placed inside of the game directory, (game/dir/mod)
-2. (YAML Support) Build `support/Repair-YAML` first to enable support for YAML.
+2. (YAML Support) Install 'BepInEx-YamlDotNet' first to enable support for YAML.
 3. Open the project in Visual Studio, JetBrains Rider or use the dotnet SDK CLI. (Or any other IDE)
 4. Build `ScavTemplate/Template.csproj` via Ctrl + Shift + B (`dotnet build`)
 5. If auto-detection misses your setup, open the linked `vars.targets` file from the project and override `BaseGamePath`

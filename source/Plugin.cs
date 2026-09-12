@@ -55,10 +55,10 @@ namespace MCPO {
 			try {
 				Assembly.Load("YamlDotNet");
 				try {
-					Assembly.Load("Repair-YAML");
+					Assembly.Load("BepInEx-YamlDotNet");
 					yaml = true;
 				} catch {
-					Logger.LogWarning("Repair-YAML was either not found or malformed, using default config");
+					Logger.LogWarning("BepInEx-YamlDotNet was either not found or malformed, using default config");
 				}
 			} catch {
 				Logger.LogWarning("YamlDotNet was either not found or malformed, using default config");
